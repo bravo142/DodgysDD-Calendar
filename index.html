@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dodgy Streams Calendar</title>
+  <title>DodgysDD Streams Calendar</title>
   <script>
     tailwind.config = {
       theme: {
@@ -28,10 +28,10 @@
 <body class="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100">
   <div id="app" class="app-shell mx-auto mt-6 flex max-w-6xl flex-col gap-6 rounded-3xl bg-white/90 text-slate-900 shadow-[0_35px_80px_rgba(15,23,42,0.45)] backdrop-blur">
     <header class="app-header flex flex-col items-center gap-3 text-center">
-      <p class="label text-xs uppercase tracking-[0.3em] text-slate-500 mb-1">Streaming Studio</p>
-      <h1 class="text-3xl font-semibold text-slate-900">Dodgy Streams Calendar</h1>
+      <p class="label text-xs uppercase tracking-[0.3em] text-slate-500 mb-1">#iFVGs4Life</p>
+      <h1 class="text-3xl font-semibold text-slate-900">DodgysDD Streams Calendar</h1>
       <p class="subtitle text-sm text-slate-500 max-w-2xl">
-        Navigate month by month, filter by the stream type you care about, and open each broadcast in a modal.
+        Navigate month by month, filter by the stream type you care about.
       </p>
       <div class="flex items-center justify-center  gap-3 text-slate-500">
         <a
@@ -82,11 +82,11 @@
           :key="type.key"
           type="button"
           class="legend-pill flex items-center gap-2 text-sm font-medium"
-          :class="{ 'border-transparent bg-primary text-white': typeFilters[type.key], 'bg-white text-slate-900': !typeFilters[type.key] }"
+          :class="{ 'border-transparent bg-primary ': typeFilters[type.key], 'bg-white text-slate-900': !typeFilters[type.key] }"
           :style="{ '--legend-color': type.color, borderColor: typeFilters[type.key] ? type.color : 'rgba(15, 23, 42, 0.1)' }"
           @click="toggleType(type.key)"
         >
-          <span class="h-3 w-3 rounded-full" :style="{ backgroundColor: type.color }" aria-hidden="true"></span>
+          <!-- <span class="h-3 w-3 rounded-full" :style="{ backgroundColor: type.color }" aria-hidden="true"></span> -->
           <span>{{ type.label }} ({{ typeCounts[type.key] || 0 }})</span>
         </button>
       </div>
