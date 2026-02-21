@@ -135,12 +135,14 @@
             v-for="stream in day.streams"
             :key="stream['youtube url']"
             type="button"
-            class="dot"
-            :class="{ 'dot-watched': isWatched(stream), 'has-extra': stream['extra notes'] }"
+            class="dot-pill"
+            :class="{ 'dot-pill--watched': isWatched(stream), 'has-extra': stream['extra notes'] }"
             :style="dotStyle(stream)"
             @click="openStream(stream)"
             :aria-label="stream.type + (stream['extra notes'] ? ' • ' + stream['extra notes'] : '')"
-          ></button>
+          >
+            <span class="dot-pill__label">{{ stream.type }}</span>
+          </button>
         </div>
       </article>
     </div>

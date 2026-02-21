@@ -170,32 +170,39 @@ body.modal-open {
   margin-top: 0.25rem;
 }
 
-.day-dots .dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 2px solid var(--border);
-  background-color: var(--dot-color, #6366f1);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
-  position: relative;
+.day-dots .dot-pill {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0.15rem 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  min-width: 85px;
+  height: 26px;
   cursor: pointer;
-  transition: opacity 0.25s ease;
+  transition: transform 0.15s ease, opacity 0.2s ease;
+  color: #fff;
+  box-shadow: 0 3px 6px rgba(15, 23, 42, 0.15);
 }
 
-.day-dots .dot.has-extra::after {
-  content: '';
-  position: absolute;
-  inset: 2px;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 50%;
+.day-dots .dot-pill.has-extra {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.4);
 }
 
-.day-dots .dot.dot-watched {
-  opacity: 0.35;
+.dot-pill__label {
+  white-space: nowrap;
 }
 
-.day-dots .dot:hover {
-  transform: scale(1.2);
+.day-dots .dot-pill--watched {
+  opacity: 0.4;
+}
+
+.day-dots .dot-pill:hover {
+  transform: translateY(-1px);
 }
 
 .modal-backdrop {
