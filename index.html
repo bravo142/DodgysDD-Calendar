@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dodgy Streams Calendar</title>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif']
+          },
+          colors: {
+            'dodgy-slate': '#0f172a'
+          }
+        }
+      },
+      daisyui: {
+        styled: true,
+        themes: ['light']
+      }
+    }
+  </script>
+  <script src="https://cdn.tailwindcss.com?plugins=daisyui"></script>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100">
+  <div id="app" class="app-shell mx-auto mt-6 flex max-w-6xl flex-col gap-6 rounded-3xl bg-white/90 text-slate-900 shadow-[0_35px_80px_rgba(15,23,42,0.45)] backdrop-blur">
+    <header class="app-header flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div>
+        <p class="label text-xs uppercase tracking-[0.3em] text-slate-500">Streaming Studio</p>
+        <h1 class="text-3xl font-semibold text-slate-900">Dodgy Streams Calendar</h1>
+        <p class="subtitle text-sm text-slate-500">
+          Navigate month by month, filter by the stream type you care about, and open each broadcast in a modal.
+        </p>
+      </div>
+      <div class="nav-controls flex items-center gap-3">
+        <button @click="changeMonth(-1)" class="btn btn-circle btn-outline" aria-label="Previous month">←</button>
+        <span id="currentMonthLabel" class="month-label text-lg font-semibold">{{ monthLabel }}</span>
+        <button @click="changeMonth(1)" class="btn btn-circle btn-outline" aria-label="Next month">→</button>
+      </div>
+    </header>
+
+    <section class="legend-card card bg-base-100 shadow">
+      <div class="legend-title flex items-center justify-between">
+        <span class="text-base font-semibold text-slate-900">Legend & filters</span>
+        <span class="text-xs text-slate-500">Click a legend item to toggle that stream type</span>
+      </div>
+      <div class="legend mt-3 flex flex-wrap gap-2" aria-live="polite">
+        <button
+          v-for="type in typeMap"
+          :key="type.key"
+          type="button"
+          class="legend-pill flex items-center gap-2 text-sm font-medium"
+          :class="{ 'border-transparent bg-primary text-white': typeFilters[type.key], 'bg-white text-slate-900': !typeFilters[type.key] }"
+          :style="{ '--legend-color': type.color, borderColor: typeFilters[type.key] ? type.color : 'rgba(15, 23, 42, 0.1)' }"
+          @click="toggleType(type.key)"
+        >
+          <span class="h-3 w-3 rounded-full" :style="{ backgroundColor: type.color }" aria-hidden="true"></span>
+          <span>{{ type.label }} ({{ typeCounts[type.key] || 0 }})</span>
+        </button>
+      </div>
+    </section>
+
+    <div v-if="error" class="alert alert-error shadow-lg">
+      <div class="flex-1">
+        <span>{{ error }}</span>
+      </div>
+    </div>
+    <div v-else-if="isLoading" class="alert alert-info shadow-lg">
+      <div class="flex-1">
+        <span>Pulling stream data…</span>
+      </div>
+    </div>
+
+    <div class="weekday-row text-xs uppercase tracking-wide text-slate-500">
+      <span>Sun</span>
+      <span>Mon</span>
+      <span>Tue</span>
+      <span>Wed</span>
+      <span>Thu</span>
+      <span>Fri</span>
+      <span>Sat</span>
+    </div>
+
+    <div id="calendarGrid" class="calendar-grid" aria-live="polite">
+      <article
+        v-for="day in calendarDays"
+        :key="day.iso"
+        class="calendar-day"
+        :class="{ 'is-today': day.isToday, 'calendar-day--inactive': !day.isCurrentMonth }"
+      >
+        <div class="flex items-center justify-between">
+          <span class="date-number text-sm font-semibold" :aria-label="day.date.toDateString()">{{ day.date.getDate() }}</span>
+        </div>
+        <div class="day-dots">
+          <button
+            v-for="stream in day.streams"
+            :key="stream['youtube url']"
+            type="button"
+            class="dot"
+            :class="{ 'dot-watched': isWatched(stream), 'has-extra': stream['extra notes'] }"
+            :style="dotStyle(stream)"
+            @click="openStream(stream)"
+            :aria-label="stream.type + (stream['extra notes'] ? ' • ' + stream['extra notes'] : '')"
+          ></button>
+        </div>
+      </article>
+    </div>
+
+    <div :class="['modal-backdrop', showModal ? 'is-open' : '']" role="dialog" aria-modal="true" @click.self="closeModal">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3 id="modalTitle" class="text-lg font-semibold text-slate-900">
+            {{ selectedStream ? selectedStream.type : 'Stream details' }}
+          </h3>
+          <button type="button" class="btn btn-circle btn-ghost" id="modalClose" aria-label="Close modal" @click="closeModal">✕</button>
+        </div>
+        <p id="modalExtra" class="modal-extra text-sm text-slate-500" v-if="selectedStream && selectedStream['extra notes']">
+          {{ selectedStream['extra notes'] }}
+        </p>
+        <div class="video-wrapper">
+          <iframe
+            v-if="selectedStream"
+            :src="modalVideoSrc"
+            id="modalVideo"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" id="toggleWatched" @click="toggleWatched(selectedStream)">
+            {{ selectedStream && isWatched(selectedStream) ? 'Mark as unwatched' : 'Mark as watched' }}
+          </button>
+          <a
+            v-if="selectedStream"
+            :href="selectedStream['youtube url']"
+            id="watchOnYoutube"
+            class="btn btn-primary"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            Watch on YouTube
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

@@ -1,0 +1,264 @@
+:root {
+  color-scheme: light;
+  font-family: 'Inter', system-ui, sans-serif;
+  --surface: #f8f9fd;
+  --surface-strong: #ffffff;
+  --card: #f0f4fd;
+  --text-muted: #4c5563;
+  --border: #e2e8f0;
+  --accent: #6366f1;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+#app {
+  width: 100%;
+}
+
+.app-shell {
+  background: var(--surface-strong);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  box-shadow: 0 35px 80px rgba(15, 23, 42, 0.4);
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.app-header .label {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: var(--text-muted);
+  margin-bottom: 0.15rem;
+}
+
+.app-header .subtitle {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.nav-controls {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.month-label {
+  font-weight: 600;
+}
+
+.filters-card,
+.legend-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 0.85rem;
+  padding: 1rem 1.2rem;
+}
+
+.filters-title,
+.legend-title {
+  font-weight: 600;
+  margin-bottom: 0.65rem;
+}
+
+.filters,
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.legend-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: #fff;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.legend-pill::before {
+  content: '';
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 999px;
+  background: var(--legend-color, #6366f1);
+}
+
+.calendar-grid {
+  margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.weekday-row {
+  margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.calendar-day {
+  min-height: 120px;
+  border-radius: 1rem;
+  border: 1px solid var(--border);
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.85);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.calendar-day.calendar-day--inactive {
+  opacity: 0.65;
+}
+
+.calendar-day .date-number {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.calendar-day.is-today {
+  border-color: var(--accent);
+  box-shadow: 0 5px 15px rgba(99, 102, 241, 0.15);
+}
+
+.day-dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.25rem;
+}
+
+.day-dots .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background-color: var(--dot-color, #6366f1);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  position: relative;
+  cursor: pointer;
+  transition: opacity 0.25s ease;
+}
+
+.day-dots .dot.has-extra::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+}
+
+.day-dots .dot.dot-watched {
+  opacity: 0.35;
+}
+
+.day-dots .dot:hover {
+  transform: scale(1.2);
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(5px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 50;
+}
+
+.modal-backdrop.is-open {
+  display: flex;
+}
+
+.modal-card {
+  background: var(--surface-strong);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  width: min(640px, 100%);
+  box-shadow: 0 30px 70px rgba(15, 23, 42, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-extra {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  min-height: 1.1rem;
+}
+
+.video-wrapper {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
+.video-wrapper iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 0.75rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 900px) {
+  body {
+    padding: 1rem;
+  }
+
+  .app-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nav-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .calendar-grid,
+  .weekday-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
