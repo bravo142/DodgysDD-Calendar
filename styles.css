@@ -116,6 +116,12 @@ body.modal-open {
   background: var(--legend-color, #6366f1);
 }
 
+.month-label {
+  min-width: 180px;
+  display: inline-flex;
+  justify-content: center;
+}
+
 .calendar-grid {
   margin-top: 1.5rem;
   display: grid;
