@@ -13,6 +13,8 @@ const TYPE_PALETTE = [
   '#22d3ee'
 ];
 const WATCHED_COOKIE = 'dodgy_watched';
+const COMMENTBOX_PROJECT_ID = '5710174446682112-proj';
+const COMMENTBOX_PROJECT_URL = 'https://bravo142.github.io/DodgysDD-Calendar/';
 
 const formatIsoLocal = (date) => {
   const year = date.getFullYear();
@@ -82,7 +84,8 @@ createApp({
       watched: loadWatchedFromCookie(),
       isLoading: true,
       error: '',
-      keyHandler: null
+      keyHandler: null,
+      commentBoxLoadPromise: null
     };
   },
   computed: {
@@ -181,10 +184,18 @@ createApp({
     openStream(stream) {
       this.selectedStream = stream;
       this.showModal = true;
+      this.$nextTick(() => {
+        const videoId = extractVideoId(stream['youtube url']);
+        this.renderCommentBox(videoId);
+      });
     },
     closeModal() {
       this.showModal = false;
       this.selectedStream = null;
+      const root = document.getElementById('modalCommentBoxRoot');
+      if (root) {
+        root.innerHTML = '';
+      }
     },
     toggleWatched(stream) {
       if (!stream) {
@@ -220,6 +231,46 @@ createApp({
     getTypeColor(key) {
       const match = this.typeMap.find((type) => type.key === key);
       return match ? match.color : TYPE_PALETTE[0];
+    },
+    ensureCommentBoxReady() {
+      if (this.commentBoxLoadPromise) {
+        return this.commentBoxLoadPromise;
+      }
+      this.commentBoxLoadPromise = new Promise((resolve) => {
+        const check = () => {
+          if (window.commentBox) {
+            resolve();
+            return;
+          }
+          setTimeout(check, 50);
+        };
+        check();
+      });
+      return this.commentBoxLoadPromise;
+    },
+    renderCommentBox(videoId) {
+      if (!videoId) {
+        return;
+      }
+      const root = document.getElementById('modalCommentBoxRoot');
+      if (!root) {
+        return;
+      }
+      const boxId = `stream-${videoId}`;
+      root.innerHTML = '';
+      const box = document.createElement('div');
+      box.className = 'commentbox';
+      box.id = boxId;
+      root.appendChild(box);
+      this.ensureCommentBoxReady().then(() => {
+        window.commentBox(COMMENTBOX_PROJECT_ID, {
+          createBoxUrl(currentBoxId) {
+            const url = new URL(COMMENTBOX_PROJECT_URL);
+            url.hash = currentBoxId;
+            return url.toString();
+          }
+        });
+      });
     }
   },
   mounted() {

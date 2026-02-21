@@ -24,6 +24,7 @@
   </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="./styles.css" />
+  <script defer src="https://unpkg.com/commentbox.io/dist/commentBox.min.js"></script>
 </head>
 <body class="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-slate-100">
   <div id="app" class="app-shell mx-auto mt-6 flex max-w-6xl flex-col gap-6 rounded-3xl bg-white/90 text-slate-900 shadow-[0_35px_80px_rgba(15,23,42,0.45)] backdrop-blur">
@@ -178,6 +179,9 @@
           >
             Watch on YouTube
           </a>
+        </div>
+        <div class="commentbox-wrapper">
+          <div id="modalCommentBoxRoot"></div>
         </div>
       </div>
     </div>

@@ -243,6 +243,12 @@ body {
   flex-wrap: wrap;
 }
 
+.commentbox-wrapper {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
 @media (max-width: 900px) {
   body {
     padding: 1rem;
