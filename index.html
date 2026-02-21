@@ -147,23 +147,28 @@
 
     <div :class="['modal-backdrop', showModal ? 'is-open' : '']" role="dialog" aria-modal="true" @click.self="closeModal">
       <div class="modal-card">
-        <div class="modal-header">
-          <h3 id="modalTitle" class="text-lg font-semibold text-slate-900">
-            {{ selectedStream ? selectedStream.type : 'Stream details' }}
-          </h3>
-          <button type="button" class="btn btn-circle btn-ghost" id="modalClose" aria-label="Close modal" @click="closeModal">✕</button>
-        </div>
-        <p id="modalExtra" class="modal-extra text-sm text-slate-500" v-if="selectedStream && selectedStream['extra notes']">
-          {{ selectedStream['extra notes'] }}
-        </p>
-        <div class="video-wrapper">
-          <iframe
-            v-if="selectedStream"
-            :src="modalVideoSrc"
-            id="modalVideo"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          ></iframe>
+        <div class="modal-inner">
+          <div class="modal-header">
+            <h3 id="modalTitle" class="text-lg font-semibold text-slate-900">
+              {{ selectedStream ? selectedStream.type : 'Stream details' }}
+            </h3>
+            <button type="button" class="btn btn-circle btn-ghost" id="modalClose" aria-label="Close modal" @click="closeModal">✕</button>
+          </div>
+          <p id="modalExtra" class="modal-extra text-sm text-slate-500" v-if="selectedStream && selectedStream['extra notes']">
+            {{ selectedStream['extra notes'] }}
+          </p>
+          <div class="video-wrapper">
+            <iframe
+              v-if="selectedStream"
+              :src="modalVideoSrc"
+              id="modalVideo"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+          <div class="commentbox-wrapper">
+            <div id="modalCommentBoxRoot"></div>
+          </div>
         </div>
         <div class="modal-actions">
           <button type="button" class="btn btn-outline" id="toggleWatched" @click="toggleWatched(selectedStream)">
@@ -179,9 +184,6 @@
           >
             Watch on YouTube
           </a>
-        </div>
-        <div class="commentbox-wrapper">
-          <div id="modalCommentBoxRoot"></div>
         </div>
       </div>
     </div>

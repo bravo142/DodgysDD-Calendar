@@ -188,6 +188,7 @@ createApp({
         const videoId = extractVideoId(stream['youtube url']);
         this.renderCommentBox(videoId);
       });
+      document.body.classList.add('modal-open');
     },
     closeModal() {
       this.showModal = false;
@@ -196,6 +197,7 @@ createApp({
       if (root) {
         root.innerHTML = '';
       }
+      document.body.classList.remove('modal-open');
     },
     toggleWatched(stream) {
       if (!stream) {
@@ -286,5 +288,6 @@ createApp({
     if (this.keyHandler) {
       window.removeEventListener('keydown', this.keyHandler);
     }
+    document.body.classList.remove('modal-open');
   }
 }).mount('#app');

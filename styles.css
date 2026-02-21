@@ -19,6 +19,14 @@ body {
   font-family: 'Inter', system-ui, sans-serif;
 }
 
+body.modal-open {
+  overflow: hidden;
+  #app {
+    overflow: hidden;
+    max-height: 100vh;
+  }
+}
+
 #app {
   width: 100%;
 }
@@ -187,6 +195,7 @@ body {
 .modal-backdrop {
   position: fixed;
   inset: 0;
+  max-height: 100vh;
   background: rgba(15, 23, 42, 0.6);
   backdrop-filter: blur(5px);
   display: none;
@@ -194,6 +203,8 @@ body {
   justify-content: center;
   padding: 1.5rem;
   z-index: 50;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .modal-backdrop.is-open {
@@ -209,6 +220,25 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+  max-height: 80vh;
+  overflow: hidden;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.modal-inner {
+  flex: 1;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  overflow-y: auto;
+  max-height: calc(80vh - 140px);
+}
+
+.modal-actions {
+  margin-top: 0.5rem;
+  justify-content: flex-end;
 }
 
 .modal-header {
